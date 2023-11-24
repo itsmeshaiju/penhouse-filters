@@ -1,7 +1,12 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "admin";
+$password = "admin123";
 $dbname = "penhouse_audit";
 
 $connection = new mysqli($servername, $username, $password, $dbname);
@@ -52,7 +57,7 @@ if (!$result) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/PenhouseAudit/audit_data_filter/assets/audit_list.css">
+    <link rel="stylesheet" href="/penhouse-filters/audit_data_filter/assets/audit_list.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
 
@@ -165,8 +170,9 @@ if (!$result) {
                 if ($fromDate && $toDate) {
                     $outlet_query .= " and m.audit_starttime between ? and ?";
                 }
-                $outlet_query .= " and m.audit_status = 2 group by m.audit_no";
-
+                $outlet_query .= " and m.audit_status = 2 group by m.audit_no,o.outlet_name,m.audit_starttime,u.username";
+                // echo $outlet_query;
+                // exit;
                 $stmt = $connection->prepare($outlet_query);
                 if ($stmt) {
                     $param_types = "";
@@ -217,7 +223,9 @@ if (!$result) {
                     echo '<td>' . $row['username'] . '</td>';
                     echo '<td>' . $row['total_sku'] . '</td>';
                     echo '<td>' . $row['total_count'] . '</td>';
-                    echo '<td><a href="\PenhouseAudit\audit_data_filter\audit_info.php?audit_no=' . $row['audit_no'] . '">View</a></td>';
+                    // echo '<td><a href="/penhouse-filters/audit_data_filter/audit_info.php?audit_no=' . $row['audit_no'] . '">View</a>   </td>';
+                    echo '<td><a href="/penhouse-filters/audit_data_filter/audit_info.php?audit_no=' . $row['audit_no'] . '">View</a></td>';
+
                     echo '</tr>';
                 }
 
